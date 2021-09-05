@@ -1,0 +1,2 @@
+# anticovid
+blah blah
