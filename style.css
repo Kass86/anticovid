@@ -1,0 +1,142 @@
+body {
+  font-family: "Poppins", sans-serif;
+  color: #444;
+  background-color: #e7e7e7;
+  height: 100vh;
+  padding: 2rem;
+}
+.welcome {
+  font-size: 1.9rem;
+  font-weight: 500;
+}
+.logo {
+  height: 5.25rem;
+}
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+}
+.totalcase {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  padding: 0 4rem;
+  margin-bottom: 2rem;
+}
+.totalcase__label {
+  font-size: 2.2rem;
+  font-weight: 500;
+  margin-bottom: -0.2rem;
+  align-items: flex-end;
+}
+.totalcase__date {
+  font-size: 1.4rem;
+  color: #888;
+}
+.totalcase__value {
+  font-size: 3rem;
+  font-weight: 300;
+}
+.table {
+  overflow: scroll;
+  background-color: #fff;
+  height: 40rem;
+}
+.table__baserows {
+  display: flex;
+  justify-content: space-between;
+  background-color: rgb(101, 240, 154);
+  border-radius: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 50;
+  padding: 1rem 4rem;
+}
+.table__rowscore {
+  display: flex;
+
+  font-size: 1.2rem;
+  font-weight: 50;
+  padding: 1.5rem 4rem;
+
+  align-items: center;
+  border-bottom: 2px solid #eee;
+  background-color: #fff;
+}
+.table__rows {
+  display: flex;
+
+  font-size: 1.2rem;
+  font-weight: 50;
+  padding: 1.5rem 4rem;
+
+  align-items: center;
+  border-bottom: 2px solid #eee;
+  background-color: #fff;
+}
+.nuoc {
+  width: 15rem;
+}
+.soca {
+  margin-left: 2rem;
+  width: 15rem;
+}
+.nguoichet {
+  margin-left: 10rem;
+}
+.hidden {
+  display: none;
+}
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(3px);
+  z-index: 5;
+}
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70%;
+
+  background-color: white;
+  padding: 6rem;
+  border-radius: 5px;
+  box-shadow: 0 3rem 5rem rgba(0, 0, 0, 0.3);
+  z-index: 10;
+}
+.close-modalcore {
+  position: absolute;
+  top: 1.2rem;
+  right: 2rem;
+  font-size: 3rem;
+  color: #333;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+.modalcore {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70%;
+
+  background-color: white;
+  padding: 6rem;
+  border-radius: 5px;
+  box-shadow: 0 3rem 5rem rgba(0, 0, 0, 0.3);
+  z-index: 10;
+}
+
+.text1 {
+  font-size: 1.5rem;
+  font-weight: 100;
+}
