@@ -1,68 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="shortcut icon" type="image/png" href="/icon.png" />
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=
-    , initial-scale=1.0">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
     <link rel="stylesheet" href="style.css" />
-    <title>Anti Covid</title>
-</head>
 
-<body>
-    <nav>
-    <p class="welcome"> Welcome to Anti Covid</p>
-    <img src="logo.png" alt="Logo" class="logo" />
-    <p class="welcome"> Made by TTV</p>
-    </nav>
-    <!-- tổng ca vào ngày.. -->
-    <div class="totalcase">
-        <div>
-          <p class="totalcase__label">Tổng số ca nhiễm toàn cầu</p>
-          <p class="totalcase__date">
-            Vào ngày <span class="date">05/03/2021</span>
-          </p>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+      integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+      crossorigin=""
+    />
+    <script
+      defer
+      src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+      integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+      crossorigin=""
+    ></script>
+    
+
+    <script defer src="script.js"></script>
+    <title> Anti Covid </title>
+  </head>
+  <body>
+    <div class="sidebar">
+      <!-- <img src="logo.png" alt="Logo" class="logo" /> -->
+      <button class="btn hidden">🔄</button>
+      <ul class="workouts">
+        <div class="form hidden"></div>
+        <div class="toptable">
+        <div class="table__baserows">
+          <div class="nuoc1">Country</div>
+          <div class="soca1">New Cases</div>
+          <div class="nguoichet1">Death Cases</div>
         </div>
-        <p class="totalcase__value">5000000</p>
-      </div>
-      <!-- Bảng dữ liệu  -->
-            <div class="table__baserows">
-                <div class="nuoc1">Nước </div>
-                <div class="soca1">Số ca nhiễm</div>
-                <div class="nguoichet1">Số người chết</div>
-            </div>
-            <div class="table">
-            <div class="table__rows">
-                <div class="nuoc">Việt Nam </div>
-                <div class="soca">500000</div>
-                <div class="nguoichet">14000</div>
-            </div>
-            <div class="table__rows">
-                <div class="nuoc">Mỹ aaaaaaaaaaaaaaa </div>
-                <div class="soca">15000000</div>
-                <div class="nguoichet">140000</div>
-            </div>
-        </div>
-        <!-- bảng chi tiết ẩn -->
-        <div class="modal hidden">
-          <button class="close-modal">&times;</button>
-          <div> Tình hình dịch bệnh ở Việt Nam</div>
-            <div class="table__baserows">
-              <div class="nuoc1">Ngày </div>
-                <div class="soca1">Số ca nhiễm</div>
-                <div class="nguoichet1">Số người chết</div>
-            </div>
-            <div class="table__rows">
-              <div class="nuoc">6/9/2021 </div>
-              <div class="soca">500000</div>
-              <div class="nguoichet">14000</div>
+        <div class="table">
+          <div class="table__rows">
+            <div class="nuoc">Việt Nam</div>
+            <div class="soca">500000</div>
+            <div class="nguoichet">14000</div>
           </div>
-          
-          
         </div>
         
-<script src="script.js"></script>
-</body>
+      </ul>
+         
+   
 
+        <script
+        type="text/javascript"
+        src="https://www.gstatic.com/charts/loader.js"
+      ></script>
+      <div class="flag">
+      <div id="chart_div"></div>
+    </div>
+    </div>
+    
+    <div id="map"></div>
+  </body>
 </html>
