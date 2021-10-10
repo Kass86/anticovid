@@ -1,2 +1,11 @@
 # anticovid
-blah blah
+
+INTRO-
+
+UI-
+
+PREDICTION-
+
+SETUP-
+REQUIREMENT/
+RUN/

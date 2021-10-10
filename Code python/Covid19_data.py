@@ -12,6 +12,7 @@ path = os.getcwd()
 # Preprocessing data and save .csv file on local directory
 def get_data_csv():
     url = "https://covid.ourworldindata.org/data/owid-covid-data.csv"
+    df = pd.read_csv(url)
     req = requests.get(url)
     url_contend = req.content
     csv_file = open('covid19_data.csv', 'wb')
@@ -19,6 +20,7 @@ def get_data_csv():
     csv_file.close()
     date = datetime.now()
     print('Data will be updated at %s' % date)
+    return df
 
 def clean_data():
     df = pd.read_csv('covid19_data.csv', encoding= 'ISO-8859-1')
@@ -29,7 +31,8 @@ def clean_data():
     return df
     
 def get_data_tuan():
-    df = Querydata()
+    #df = Querydata()
+    df = get_data_csv()
     cols = ['iso_code', 'continent', 'location', 'date','population', 'total_cases', 'new_cases','new_cases_smoothed', 'total_deaths', 'new_deaths','new_deaths_smoothed', 'total_vaccinations']
     df = df[cols]
     df = df.loc[(df.location == 'United States') | (df.location == 'United Kingdom') | (df.location == 'Vietnam') | (df.location == 'Brazil')
@@ -40,6 +43,36 @@ def get_data_tuan():
     df.to_json(r'%s\covid19_data_cleaned.json' % path)
     covid19_data = df.to_json()
     return covid19_data
+
+def get_data_json():    
+    # Download data
+    url = "https://covid.ourworldindata.org/data/owid-covid-data.csv"
+    df = pd.read_csv(url)
+
+    # Convert date format
+    df['date'] = pd.to_datetime(df['date'])
+    df = df[df.date >= '2021-01-01']
+    df['date'] = df['date'].dt.strftime("%d-%m-%Y")
+    date_update = datetime.now()
+
+    # Choose some columns of data table
+    cols = ['iso_code', 'continent', 'location', 'date','population', 'total_cases', 'new_cases','new_cases_smoothed', 'total_deaths', 'new_deaths','new_deaths_smoothed', 'total_vaccinations']
+    df = df[cols]
+
+    # Total case conirmed ranking by country
+    country_ranking = pd.DataFrame(df[df['continent'].notnull()].groupby('location')['new_cases'].sum().sort_values(ascending=False).head(50))
+    country_ranking = country_ranking.index.to_list()
+    data = pd.DataFrame()
+    for country in country_ranking:
+        df1 = df[df['location'] == country]
+        data = data.append(df1)
+    data = data.reset_index()
+    data['location'] = data['location'].replace('Czechia', 'Czech')
+    data.iloc[:,4:] = data.iloc[:,4:].fillna(0)
+    # Save Cleaned data in .csv file
+    data.to_json(r'%s\covid19_data_cleaned.json' % path)
+    #covid19_data = df.to_json()
+    return print('Cleaned data has been updated at %s' %date_update)
 
 
 def get_data(country,data):
@@ -89,4 +122,5 @@ if __name__ == "__main__":
     #print(np)
 
     #df = get_data_tuan()
-    #print(df)
+    # Tuan lay data dinh dang json nay nha
+    data = get_data_json()
