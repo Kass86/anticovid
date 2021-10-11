@@ -11,11 +11,11 @@ from sqlalchemy.sql.expression import column
 
 # Connect database 
 def ConnectDatabase():
-    SERVER = 'DESKTOP-J60SFS7\VIET'
+    SERVER = 'ADMIN\TUAN'
     DATABASE = 'PortfolioProject'
     DRIVER = 'SQL Server Native Client 11.0'
     USERNAME = 'sa'
-    PASSWORD = 'Queentranv2206'
+    PASSWORD = '0945766246'
     DATABASE_CONNECTION = f'mssql://{USERNAME}:{PASSWORD}@{SERVER}/{DATABASE}?driver={DRIVER}'
 
     engine = create_engine(DATABASE_CONNECTION)
@@ -47,7 +47,14 @@ def UpdateDatabase():
 
 
 if __name__ == "__main__":
+<<<<<<< HEAD
     #url = "https://covid.ourworldindata.org/data/owid-covid-data.csv"
     #df = pd.read_csv(url)
     #engine = create_engine('mysql://root:root@localhost/contacts')
     print('vietcute')
+=======
+    ConnectDatabase()
+    df = Querydata()
+
+    
+>>>>>>> c915b3b75bf495b8e231f2af33b189fed418619c

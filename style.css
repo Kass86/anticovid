@@ -22,7 +22,7 @@ html {
 
 body {
   font-family: 'Manrope', sans-serif;
-  color: var(--color-light--2);
+
   font-weight: 400;
   line-height: 1.6;
   height: 100vh;
@@ -32,12 +32,6 @@ body {
   padding: 2.5rem;
 
   display: flex;
-}
-
-/* GENERAL */
-a:link,
-a:visited {
-  color: var(--color-brand--1);
 }
 
 /* SIDEBAR */
@@ -57,6 +51,7 @@ a:visited {
 
 .workouts {
   /* 77 */
+  color: var(--color-light--2);
   list-style: none;
   height: 77vh;
   overflow-y: scroll;
@@ -170,24 +165,6 @@ a:visited {
   display: none;
 }
 
-.copyright {
-  margin-top: auto;
-  font-size: 1.3rem;
-  text-align: center;
-  color: var(--color-light--1);
-}
-
-.twitter-link:link,
-.twitter-link:visited {
-  color: var(--color-light--1);
-  transition: all 0.2s;
-}
-
-.twitter-link:hover,
-.twitter-link:active {
-  color: var(--color-light--2);
-}
-
 /* MAP */
 #map {
   flex: 1;
@@ -271,8 +248,36 @@ a:visited {
   border-bottom: 2px solid #2d3439;
   background-color: var(--color-dark--2);
   justify-content: space-between;
+  transition: all 0.2s;
 }
 
+.nuoc1 {
+  flex: 1 100px;
+}
+.soca1 {
+  flex: 2;
+  text-align: right;
+}
+.nguoichet1 {
+  flex: 3;
+  text-align: right;
+}
+.ngay {
+  flex: 1 90px;
+}
+.nuoc {
+  flex: 1 100px;
+}
+.soca {
+  flex: 2;
+  text-align: right;
+  padding-right: 20px;
+}
+.nguoichet {
+  flex: 3;
+  text-align: right;
+  padding-right: 20px;
+}
 /* .table {
   background-color: var(--color-dark--2);
   height: 10rem;
@@ -297,6 +302,13 @@ a:visited {
   justify-content: space-between;
 }
 
+.table__rows2.predictdown {
+  background-color: #00c46a;
+}
+.table__rows2.predictup {
+  background-color: #df6565;
+}
+
 .btn {
   position: absolute;
 
@@ -308,8 +320,3 @@ a:visited {
   display: flex;
   background-color: var(--color-dark--1);
 }
-/* .countryflag {
-  margin-top: 30px;
-  width: 100px;
-  background-color: #ffb545;
-} */

@@ -2,106 +2,68 @@
 
 // prettier-ignore
 
+async function main() {
+  let data = await fetchdata();
+  console.log(data);
+  let realData = [];
+  let smallData = [];
+  let days = Object.keys(data.iso_code).length/50;
+  for (let i = 0; i < Object.keys(data.iso_code).length; i++) {
+    smallData.push([
+      data.iso_code[i],
+      data.location[i],
+      data.date[i],
+      data.new_cases[i],
+      data.new_deaths[i],
+      data.total_cases[i],
+      data.total_deaths[i],
+    ]);
+
+    if (i !== 0 && (i + 1) % days === 0) {
+      realData.push(smallData); 
+      smallData = [];
+    }
+  }
+
+  console.log(realData);
+  
+  
+
+let map;
 let dataChart = [];
-let dataChart2;
+let dataChart2,dataChart3;
 const form = document.querySelector('.form');
 const containerWorkouts = document.querySelector('.workouts');
-const data1 = [
-  ['VN', 12000, 400],
-  ['My', 100000, 5000],
-  ['Uc', 20000, 1500],
-  ['Y', 15000, 600],
-];
-const data2 = [
-  ['Vietnam', [12000, 13000], [400, 500]],
-  ['United States of America', [100000, 110000], [5000, 6000]],
-  ['Australia', [20000, 19000], [1500, 1600]],
-  ['Italy', [15000, 16000], [600, 500]],
-];
-const data3 = [
-  [
-    'Vietnam',
-    [12000, 11000, 14000, 15000],
-    [400, 350, 600, 700],
-    ['4/1', '3/1', '2/1', '1/1'],
-  ],
-  [
-    'United States of America',
-    [100000, 110000, 70000, 80000],
-    [5000, 6000, 5000, 7000],
-    ['4/1', '3/1', '2/1', '1/1'],
-  ],
-  [
-    'Australia',
-    [20000, 19000, 15000, 16000],
-    [1500, 1600, 2000, 3000],
-    ['4/1', '3/1', '2/1', '1/1'],
-  ],
-  [
-    'Italy',
-    [15000, 16000, 10000, 7000],
-    [600, 500, 700, 450],
-    ['4/1', '3/1', '2/1', '1/1'],
-  ],
-  [
-    'Vietnam',
-    [12000, 11000, 14000, 15000],
-    [400, 350, 600, 700],
-    ['4/1', '3/1', '2/1', '1/1'],
-  ],
-  [
-    'United States of America',
-    [100000, 110000, 70000, 80000],
-    [5000, 6000, 5000, 7000],
-    ['4/1', '3/1', '2/1', '1/1'],
-  ],
-  [
-    'Australia',
-    [20000, 19000, 15000, 16000],
-    [1500, 1600, 2000, 3000],
-    ['4/1', '3/1', '2/1', '1/1'],
-  ],
-  [
-    'Italy',
-    [15000, 16000, 10000, 7000],
-    [600, 500, 700, 450],
-    ['4/1', '3/1', '2/1', '1/1'],
-  ],
-  [
-    'Vietnam',
-    [12000, 11000, 14000, 15000],
-    [400, 350, 600, 700],
-    ['4/1', '3/1', '2/1', '1/1'],
-  ],
-  [
-    'United States of America',
-    [100000, 110000, 70000, 80000],
-    [5000, 6000, 5000, 7000],
-    ['4/1', '3/1', '2/1', '1/1'],
-  ],
-  [
-    'Australia',
-    [20000, 19000, 15000, 16000],
-    [1500, 1600, 2000, 3000],
-    ['4/1', '3/1', '2/1', '1/1'],
-  ],
-  [
-    'Italy',
-    [15000, 16000, 10000, 7000],
-    [600, 500, 700, 450],
-    ['4/1', '3/1', '2/1', '1/1'],
-  ],
-];
 
-const convertDataForChart = function (data) {
-  const a = data.slice(1);
-  const b = a.pop();
-  a.unshift(b);
-  dataChart = [];
-  for (let u = 0; u < a[0].length; u++) {
-    dataChart.push(a.map(i => i[u]));
-  }
-};
+
+// const convertDataForChart = function (data) {
+//   for (let u = 0; u < database.length; u++) {
+//     data.push(a.map(i => i[u]));
+//   }
+// };
+
+
+      const convertDataForChart = function(data){
+        data.forEach(function(cur){
+          // const smallcur = [...cur]
+          // smallcur.shift()
+          // smallcur.shift()
+          // smallcur.pop()
+          // smallcur.pop()
+          dataChart.push(cur.slice(2,5));
+        })
+      }
+      const convertDataForChart2 = function(data){
+        data.forEach(function(cur){
+          dataChart2.push(cur.slice(2,4));
+        })
+      }
+      const convertDataForChart3 = function(data){
+        data.forEach(function(cur){
+          const smallcur = [...cur.slice(2,3),...cur.slice(4,5)]
+          dataChart3.push(smallcur);
+        })
+      }
 
 const chart = function (dataChart) {
   google.charts.load('current', { packages: ['corechart', 'line'] });
@@ -121,7 +83,7 @@ const chart = function (dataChart) {
         title: 'Time',
       },
       vAxis: {
-        title: 'Case',
+        title: 'Cases',
       },
     };
 
@@ -132,76 +94,37 @@ const chart = function (dataChart) {
   }
 };
 
-const restCountries = function (countryName) {
-  fetch(`https://restcountries.com/v2/name/${countryName}`)
-    .then(response => {
-      form.innerHTML = '';
-      document.querySelector('.toptable').classList.add('hidden');
-      document.querySelector('.btn').classList.remove('hidden');
+const chartnewcase = function (dataChart,dulieubieudo) {
+  google.charts.load('current', { packages: ['corechart', 'line'] });
+  google.charts.setOnLoadCallback(drawCurveTypes);
 
-      return response.json();
-    })
-    .then(data => {
-      console.log(data);
-      //fix the special data
-      let i = 0;
-      if (data[1]) {
-        i = 1;
-      }
-      if (data[0].name === 'China') {
-        i = 0;
-      }
+  function drawCurveTypes() {
+    var data = new google.visualization.DataTable();
 
-      const base = data3.find(index => index[0] === data[i].name);
-      let html = `
-      <div class="workout__title">${data[i].name}</div>
-      <img class="country__img" src="${data[i].flag}" />
-      <div class="workout__title">Capital: ${data[i].capital}</div>
-      <div class="workout__title">Region: ${data[i].region}</div>
-      <div class="workout__title">Population: ${
-        data[i].population / 1000000
-      }M</div>
-      
-    </div>`;
-      if (base) {
-        html += `<div class="workout__title">New cases: ${base[1][0]} (${
-          base[1][0] - base[1][1] > 0 ? '+' : ''
-        }${Number(((base[1][0] - base[1][1]) * 100) / base[1][1]).toFixed(
-          2
-        )}%)</div>
-    <div class="workout__title">New deaths: ${base[2][0]} (${Number(
-          ((base[2][0] - base[2][1]) * 100) / base[2][1]
-        ).toFixed(2)}%)</div>`;
-      } else document.getElementById('chart_div').style.display = 'none';
-      form.insertAdjacentHTML('beforeEnd', html);
-      form.classList.remove('hidden');
+    data.addColumn('string', 'days');
+    data.addColumn('number', `${dulieubieudo}`);
 
-      //convert data3 for chart
+    data.addRows(dataChart);
 
-      convertDataForChart(base);
+    var options = {
+      hAxis: {
+        title: 'Time',
+      },
+      vAxis: {
+        title:  `${dulieubieudo} Cases`,
+            },
+    };
 
-      document.getElementById('chart_div').style.display = 'grid';
-      document.querySelector('.country__img2').classList.add('hidden');
-      // console.log(dataChart);
-      chart(dataChart.reverse());
-    });
-};
-const detailCountry = function (data) {
-  form.innerHTML = '';
-  if (!data.countryName) {
-    const html = `<div class="workout__title">Country not found! Please choose another location</div>`;
-    form.insertAdjacentHTML('beforeEnd', html);
-    document.querySelector('.toptable').classList.add('hidden');
-    form.classList.remove('hidden');
-    document.getElementById('chart_div').style.display = 'none';
-    document.querySelector('.btn').classList.remove('hidden');
-  } else {
-    //restcountries
-    restCountries(data.countryName);
+    var chart = new google.visualization.LineChart(
+      document.getElementById('chart_div')
+    );
+    chart.draw(data, options);
   }
 };
 
+
 ///////////////////////
+
 if (navigator.geolocation)
   navigator.geolocation.getCurrentPosition(
     function (pos) {
@@ -210,7 +133,7 @@ if (navigator.geolocation)
       // console.log(latitude, longitude);
       const coords = [latitude, longitude];
       // leaflet
-      const map = L.map('map').setView(coords, 5);
+      map = L.map('map').setView(coords, 5);
 
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution:
@@ -224,6 +147,7 @@ if (navigator.geolocation)
         const { lat, lng } = mapEvent.latlng;
 
         const whereAmI = function (lat, lng) {
+          console.log(lat,lng);
           const data = fetch(
             `http://api.geonames.org/countryCodeJSON?lat=${lat}&lng=${lng}&username=nguyenvuanhtuan`
           )
@@ -231,7 +155,6 @@ if (navigator.geolocation)
               return response.json();
             })
             .then(data => {
-              // console.log(data);
               // call detail countries for map
               detailCountry(data);
             });
@@ -260,16 +183,102 @@ if (navigator.geolocation)
       alert('Could not get your position');
     }
   );
-///////////////////////////////////////
+
+const restCountries = function (countryName) {
+  console.log(countryName)
+  fetch(`https://restcountries.com/v2/name/${countryName}`)
+    .then(response => {
+      form.innerHTML = '';
+      document.querySelector('.toptable').classList.add('hidden');
+      document.querySelector('.btn').classList.remove('hidden');
+
+      return response.json();
+    })
+    .then(data => {
+      console.log(data);
+      // fix the special data
+      let i = 0;
+      if (data[1]) {
+        i = 1;
+      }
+      if (data[0].name === 'Iran (Islamic Republic of)') {
+        i = 0;
+      }
+      if (data[0].name === 'Georgia') {
+        i = 0;
+      }
+      
+      if (data[0].name === 'China') {
+        i = 0;
+      }
+
+      const base = realData.find(index => index[0][0] === data[i].alpha3Code);
+      
+      const database = base?.slice().reverse();
+      // console.log(base) 
+      // console.log(database);
+      // console.log(realData)
+      let html = `
+      <div class="workout__title">${data[i].name}</div>
+      <img class="country__img" src="${data[i].flag}" />
+      <div class="workout__title">Capital: ${data[i].capital}</div>
+      <div class="workout__title">Region: ${data[i].region}</div>
+      <div class="workout__title">Population: ${
+        data[i].population / 1000000
+      }M</div>
+      
+    </div>`;
+      if (base) {
+        html += `<div class="workout__title">Total cases: ${database[0][5]} cases</div>
+    <div class="workout__title">New deaths: ${database[0][6]} deaths `;
+      } else document.getElementById('chart_div').style.display = 'none';
+      form.insertAdjacentHTML('beforeEnd', html);
+      form.classList.remove('hidden');
+      document.querySelector('.country__img2')?.classList.add('hidden');
+      //convert data3 for chart
+
+      // convertDataForChart(base);
+      
+      dataChart = [];
+      convertDataForChart(database)
+      console.log(dataChart)
+
+      document.getElementById('chart_div').style.display = 'grid';
+      
+      // console.log(dataChart);
+      chart(dataChart.slice().reverse());
+    });
+};
+const detailCountry = function (data) {
+  form.innerHTML = '';
+  if (!data.countryName) {
+    const html = `<div class="workout__title">Country not found! Please choose another location</div>`;
+    form.insertAdjacentHTML('beforeEnd', html);
+    document.querySelector('.toptable').classList.add('hidden');
+    form.classList.remove('hidden');
+    document.querySelector('.country__img2')?.classList.add('hidden');
+    document.getElementById('chart_div').style.display = 'none';
+    document.querySelector('.btn').classList.remove('hidden');
+  } else {
+    //restcountries
+    if (data.countryName === 'Czechia') {restCountries('Czech')}   //get rid of Czechia data
+    else restCountries(data.countryName);
+  }
+};
+
+
+
 const dashboard = document.querySelector('.table');
 
 const bangdulieu = function (dulieu) {
   dashboard.innerHTML = '';
   dulieu.forEach(function (test, i) {
-    const html = `<div class="table__rows country${i}">
-    <div class="nuoc">${i + 1}. ${test[0]} </div>
-    <div class="soca">${test[1][0]}</div>
-    <div class="nguoichet">${test[2][0]}</div>
+    test = test.slice().reverse();
+    // const test = tes.slice().reverse();
+    const html = `<div class="table__rows country0${i}">
+    <div class="nuoc">${i + 1}. ${test[0][1]} </div>
+    <div class="soca">${test[0][5]}</div>
+    <div class="nguoichet">${test[0][6]}</div>
 </div>`;
     dashboard.insertAdjacentHTML('beforebegin', html);
 
@@ -277,10 +286,10 @@ const bangdulieu = function (dulieu) {
     // document.querySelector('.toptable').classList.add("hidden");
   });
 };
-bangdulieu(data3);
+bangdulieu(realData);
 
 // click xuat hien bang du lieu an
-let thututruoc, el, preEl;
+let thutu,thututruoc, el, preEl;
 const boandulieu = function (element) {
   document.querySelector(`.${element} div.soca`).classList.remove('hidden');
   document
@@ -292,12 +301,13 @@ const andulieu = function (element) {
   document.querySelector(`.${element} div.nguoichet`).classList.add('hidden');
 };
 
-const bangdulieuan = function (data) {
+const bangdulieuan = function () {
   document.querySelector('.toptable').addEventListener('click', function (e) {
+    ///// tao bang
     if (e.target.closest('.table__rows')) {
       el = e.target.closest('.table__rows').classList.value.replace(' ', '.');
-
-      const thutu = el.slice(-1);
+      thutu = +el.slice(-2);
+      console.log(thutu)
 
       // nice remove element by classname
       document.querySelectorAll('.table__rows2').forEach(function (a) {
@@ -305,15 +315,24 @@ const bangdulieuan = function (data) {
       });
 
       let html2 = ``;
-      convertDataForChart(data[thutu]);
-      dataChart2 = dataChart;
-      dataChart2.forEach(function (cur, i) {
+      
+
+
+      const dataForTable = realData[thutu].slice().reverse();
+      
+      html2 += `<div class="table__rows2 ${(dataForTable[3][3] >= dataForTable[0][3])? 'predictup': 'predictdown'}">
+      <div class="ngay"> Next day (Predict) </div>
+      <div class="soca"> ${dataForTable[3][3]}</div>
+      <div class="nguoichet">${dataForTable[3][4]}</div>
+      </div>`;
+
+      for(let o = 0; o<7 ; o++)    {
         html2 += `<div class="table__rows2">
-  <div class="ngay"> ${cur[0]} </div>
-  <div class="soca"> ${cur[1]}</div>
-  <div class="nguoichet">${cur[2]}</div>
-</div>`;
-      });
+        <div class="ngay"> ${dataForTable[o][2]} </div>
+        <div class="soca"> ${dataForTable[o][3]}</div>
+        <div class="nguoichet">${dataForTable[o][4]}</div>
+        </div>`;
+      };
       document.querySelector(`.${el}`).insertAdjacentHTML('afterend', html2);
 
       // an hien so ca moi va so ca tu vong khi click vao tung nuoc
@@ -338,7 +357,8 @@ const bangdulieuan = function (data) {
 
       let html3;
       const flagCountries = function (thutudata) {
-        fetch(`https://restcountries.com/v2/name/${data3[thutudata][0]}`)
+        console.log(thutu,realData[thutudata][0][1])
+        fetch(`https://restcountries.com/v2/name/${realData[thutudata][0][1]}`)
           .then(response => {
             return response.json();
           })
@@ -352,32 +372,91 @@ const bangdulieuan = function (data) {
             if (data[0].name === 'China') {
               i = 0;
             }
-            console.log(data[i].flag);
-            // html3 = `<div class="countryflag" src="${data[i].flag}"></div>`;
+            if (data[0].name === 'Georgia') {
+              i = 0;
+            }      
+            if (data[0].name === 'Iran (Islamic Republic of)') {
+              i = 0;
+            }
+           
             document.querySelector('.country__img2')?.remove();
             html3 = `<img class="country__img2" src="${data[i].flag}" />`;
             document
               .querySelector(`.flag`)
               .insertAdjacentHTML('beforeend', html3);
+            /// di chuyen toi nuoc do tren ban do
+            const [lat2,lng2] = data[i].latlng;
+            const coords2 = [lat2,lng2];
+          
+            map.setView(coords2, 4);
+            document.querySelectorAll('.leaflet-marker-shadow.leaflet-zoom-animated').forEach(function (a) {
+              a.remove();
+            });
+
+            document.querySelectorAll('.leaflet-marker-icon.leaflet-zoom-animated.leaflet-interactive').forEach(function (a) {
+              a.remove();
+            });
+
+            
+            L.marker([lat2, lng2])
+          .addTo(map)
+
+
+          
+            
           });
       };
-
       flagCountries(thutu);
-      chart(dataChart2.reverse());
+
+      // chart 
+      dataChart2 = [];
+      convertDataForChart2(realData[thutu]);
+      
+      chartnewcase(dataChart2,'New');
     }
   });
 };
-bangdulieuan(data3);
+bangdulieuan();
 
 document.querySelector('.btn').addEventListener('click', function () {
   document.querySelector('.toptable').classList.remove('hidden');
-  document.querySelector('.country__img2').classList.remove('hidden');
+  document.querySelector('.country__img2')?.classList.remove('hidden');
   form.classList.add('hidden');
-  console.log(dataChart, dataChart2);
+  
   if (!dataChart2) document.getElementById('chart_div').style.display = 'none';
   else {
-    chart(dataChart2);
+    chartnewcase(dataChart2,'New');
     document.getElementById('chart_div').style.display = 'grid';
   }
   document.querySelector('.btn').classList.add('hidden');
 });
+
+let d = 0;
+document.querySelector('.flag').addEventListener('click',function(e){
+  if (e.target.closest('.country__img2')) {
+    if (d === 0) {
+    dataChart3 = [];
+    convertDataForChart3(realData[thutu]);
+    console.log(thutu)
+    chartnewcase(dataChart3,'Death');
+    d = 1;  
+    
+  } else {
+    
+    chartnewcase(dataChart2,'New');
+    d = 0; 
+  }
+}})
+
+
+///////////////////////////////////////
+
+async function fetchdata() {
+  const res = await fetch('./covid19_data_cleaned.json');
+  const data = await res.json();
+  return data;
+}
+
+
+}
+main();
