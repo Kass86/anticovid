@@ -7,6 +7,8 @@ import pandas as pd
 from sqlalchemy.sql.expression import column
 
 
+
+
 # Connect database 
 def ConnectDatabase():
     SERVER = 'DESKTOP-J60SFS7\VIET'
@@ -45,7 +47,7 @@ def UpdateDatabase():
 
 
 if __name__ == "__main__":
-    newdata = Querydata()
-    print(newdata)
-
-    
+    #url = "https://covid.ourworldindata.org/data/owid-covid-data.csv"
+    #df = pd.read_csv(url)
+    #engine = create_engine('mysql://root:root@localhost/contacts')
+    print('vietcute')

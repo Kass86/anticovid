@@ -5,30 +5,19 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 from pandas.core.frame import DataFrame
 from scipy.sparse import data
+from scipy.sparse.lil import _prepare_index_for_memoryview
 from sklearn.linear_model import LinearRegression
 from PyConnectDatabase import Querydata
 
-def GetData1():
+def GetData():
     file_name = "https://covid.ourworldindata.org/data/owid-covid-data.csv"
     df = pd.read_csv(file_name)
-    cols = ['date', 'iso_code', 'continent', 'location','population', 'total_cases', 'new_cases',
-       'new_cases_smoothed', 'total_deaths', 'new_deaths','new_deaths_smoothed', 'reproduction_rate',
-       'stringency_index','icu_patients','hosp_patients','new_tests','positive_rate','stringency_index']
+    cols = ['iso_code', 'continent', 'location', 'date','population', 'total_cases', 'new_cases','new_cases_smoothed', 'total_deaths', 'new_deaths','new_deaths_smoothed', 'total_vaccinations',
+        'reproduction_rate','stringency_index','hosp_patients', 'icu_patients','new_tests']
     df = df[cols]
-    data = df.set_index('date')
-    data = data.iloc[:,2:].fillna(0)
-    return data
-
-def GetData():
-    df = Querydata()
-    cols = ['date', 'iso_code', 'continent', 'location','population', 'total_cases', 'new_cases',
-        'new_cases_smoothed', 'total_deaths', 'new_deaths','new_deaths_smoothed', 'reproduction_rate',
-        'icu_patients','hosp_patients','new_tests','positive_rate']
-    df = df[cols]
-    data = df.set_index('date')
-    data = data.iloc[:,2:].fillna(0)
-
-    return data
+    df = df.set_index('date')
+    df.iloc[:,3:] = df.iloc[:,3:].fillna(0)
+    return df
 
 
 def FindDayTrain(country):
@@ -48,7 +37,7 @@ def FindDayTrain(country):
     
     idd = 0
     day_train_loop = pd.DataFrame(index =['Mean error'])
-    for i in range(7,61):
+    for i in range(7,31):
         day_train = i
         pred_day = 300
         y_predict=[]
@@ -115,11 +104,11 @@ def PredictNewCases(country,plot=False):
     else:
         pass
 
-def Trainning_data():
+def Trainning_data(num_country):
     day_train = pd.DataFrame(index=['Day_train'])
     data = GetData()
     #countries = data['location'].unique()
-    countries = ['United States', 'Vietnam', 'Brazil', 'India', 'United Kingdom', 'France', 'Italy']
+    countries = country_ranking(num_country)
     idd = 0
     for cont in countries:
         day,_ = FindDayTrain(cont)
@@ -127,10 +116,48 @@ def Trainning_data():
         idd +=1
     return day_train
 
-def new_case_nextday(country):
-    day_train, = FindDayTrain(country)
-    day = datetime.now()
-    return day_train
+def country_ranking(num_country):
+    url = "https://covid.ourworldindata.org/data/owid-covid-data.csv"
+    df = pd.read_csv(url)
+
+    # Convert date format
+    df['date'] = pd.to_datetime(df['date'])
+    df = df[df.date >= '2021-01-01']
+    df['date'] = df['date'].dt.strftime("%d-%m-%Y")
+    date_update = datetime.now()
+
+    # Choose some columns of data table
+    cols = ['iso_code', 'continent', 'location', 'date','population', 'total_cases', 'new_cases','new_cases_smoothed', 'total_deaths', 'new_deaths','new_deaths_smoothed', 'total_vaccinations']
+    df = df[cols]
+
+    # Total case conirmed ranking by country
+    country_ranking = pd.DataFrame(df[df['continent'].notnull()].groupby('location')['new_cases'].sum().sort_values(ascending=False).head(num_country))
+    country_ranking = country_ranking.index.to_list()
+
+    return country_ranking
+
+
+
+def new_case_nextday(day_train, country):
+    # Load data 
+    data = GetData()
+    data = data[data['location'] == country]
+
+    # Feature
+    feature = ['hosp_patients', 'icu_patients','new_tests','new_deaths']
+    target = ['new_cases_smoothed']
+    
+    # X,y to predict
+    X_train = data.iloc[len(data)-day_train-2:len(data)-2][feature].values
+    X_pred = data.iloc[len(data)-1][feature].values
+    y_train = data.iloc[len(data)-day_train-2:len(data)-2][target].values
+
+    # Linear Regression
+    regressor = LinearRegression().fit(X_train,y_train)
+    y_pred = regressor.predict(np.array(X_pred).reshape(1,-1))
+    newcasenextday = int(y_pred)
+    return round(newcasenextday,0)
+    
 
 if __name__ == "__main__":
     #data = GetData()
@@ -140,6 +167,8 @@ if __name__ == "__main__":
     #print(day_train)
     #print(data)
     #PredictNewCases(country,plot=True)
-    day_train = Trainning_data()
-    print(day_train)
+    newcasenextday = new_case_nextday(14, 'Vietnam')
+    print(newcasenextday)
+    
+    
     

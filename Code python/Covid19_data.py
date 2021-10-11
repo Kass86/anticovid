@@ -1,10 +1,11 @@
 import pandas as pd
 import os
+from pandas.core.dtypes.missing import notnull
 import requests
 from datetime import datetime
 import plotly.express as px
 from PyConnectDatabase import Querydata
-from LinearRegression_Model import PredictNewCases
+from LinearRegression_Model import PredictNewCases, new_case_nextday
 
 # Get the current working directory
 path = os.getcwd()
@@ -20,35 +21,52 @@ def get_data_csv():
     date = datetime.now()
     print('Data will be updated at %s' % date)
 
-def clean_data():
-    df = pd.read_csv('covid19_data.csv', encoding= 'ISO-8859-1')
-    cols = ['iso_code', 'continent', 'location', 'date','population', 'total_cases', 'new_cases','new_cases_smoothed', 'total_deaths', 'new_deaths','new_deaths_smoothed', 'total_vaccinations',
-        'reproduction_rate','stringency_index']
-    df = df[cols].fillna(0)
-    df.to_csv(r'%s\covid19_data_cleaned.csv' % path)
-    return df
-    
-def get_data_tuan():
-    df = Querydata()
+
+def get_data_json():    
+    # Download data
+    url = "https://covid.ourworldindata.org/data/owid-covid-data.csv"
+    df = pd.read_csv(url)
+
+    # Convert date format
+    df['date'] = pd.to_datetime(df['date'])
+    df = df[df.date >= '2021-01-01']
+    df['date'] = df['date'].dt.strftime("%d-%m-%Y")
+    date_update = datetime.now()
+
+    # Choose some columns of data table
     cols = ['iso_code', 'continent', 'location', 'date','population', 'total_cases', 'new_cases','new_cases_smoothed', 'total_deaths', 'new_deaths','new_deaths_smoothed', 'total_vaccinations']
     df = df[cols]
-    df = df.loc[(df.location == 'United States') | (df.location == 'United Kingdom') | (df.location == 'Vietnam') | (df.location == 'Brazil')
-            | (df.location == 'India') | (df.location == 'Italy') | (df.location == 'Germany') | (df.location == 'France')]
-    df = df[df.date >= '2021-01-01']
-    df = df.reset_index()
-    df['new_cases_predict'] = df.new_cases_smoothed + 5000
-    df.to_json(r'%s\covid19_data_cleaned.json' % path)
-    covid19_data = df.to_json()
-    return covid19_data
 
+    # Total case conirmed ranking by country
+    country_ranking = pd.DataFrame(df[df['continent'].notnull()].groupby('location')['new_cases'].sum().sort_values(ascending=False).head(50))
+    country_ranking = country_ranking.index.to_list()
+    data = pd.DataFrame()
+    for country in country_ranking:
+        df1 = df[df['location'] == country]
+        data = data.append(df1)
+    data = data.reset_index()
+    data.iloc[:,4:] = data.iloc[:,4:].fillna(0)
 
-def get_data(country,data):
-    df = clean_data()
-    df = df[df['location'] == country]
-    return df.to_numpy()
+    data['next_day_predict'] = 0
+    for country in country_ranking:
+        newcase = new_case_nextday(14, country)
+        data.loc[data['location'] == country,'next_day_predict'] = newcase
 
+    # Save Cleaned data in .csv file
+    data.to_json(r'%s\covid19_data_cleaned.json' % path)
+    print('Cleaned data has been updated at %s' %date_update)
+    return data
 
 # Data visualizations
+def clean_data():
+    url = "https://covid.ourworldindata.org/data/owid-covid-data.csv"
+    df = pd.read_csv(url)
+    cols = ['iso_code', 'continent', 'location', 'date','population', 'total_cases', 'new_cases','new_cases_smoothed', 'total_deaths', 'new_deaths','new_deaths_smoothed', 'total_vaccinations',
+        'reproduction_rate','stringency_index']
+    df = df[cols]
+    df.iloc[:, 4:] = df.iloc[:,4:].fillna(0)
+    df.to_csv(r'%s\covid19_data_cleaned.csv' % path)
+    return df
 
 def line_chart(countries,column):
     df = clean_data()
@@ -88,5 +106,7 @@ if __name__ == "__main__":
     #np = get_data('Vietnam','new_cases')
     #print(np)
 
-    #df = get_data_tuan()
-    #print(df)
+    # Get data for FE
+    df = get_data_json()
+    print(df)
+    
