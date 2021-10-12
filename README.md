@@ -1,7 +1,7 @@
 # anticovid
 
 INTRO:
-Data's description here: https://github.com/owid/covid-19-data/tree/master/public/data
+- Data's description here: https://github.com/owid/covid-19-data/tree/master/public/data
 
 UI:
 
