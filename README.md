@@ -2,6 +2,7 @@
 
 INTRO:
 - Data's description here: https://github.com/owid/covid-19-data/tree/master/public/data
+- Covid19 Dashboard here: https://datastudio.google.com/s/sR3DrBad-v8
 
 UI:
 
