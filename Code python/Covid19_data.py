@@ -13,7 +13,6 @@ path = os.getcwd()
 # Preprocessing data and save .csv file on local directory
 def get_data_csv():
     url = "https://covid.ourworldindata.org/data/owid-covid-data.csv"
-    df = pd.read_csv(url)
     req = requests.get(url)
     url_contend = req.content
     csv_file = open('covid19_data.csv', 'wb')
@@ -21,8 +20,6 @@ def get_data_csv():
     csv_file.close()
     date = datetime.now()
     print('Data will be updated at %s' % date)
-    return df
-
 
 
 def get_data_json():    
@@ -48,7 +45,7 @@ def get_data_json():
         df1 = df[df['location'] == country]
         data = data.append(df1)
     data = data.reset_index()
-    data.iloc[:,4:] = data.iloc[:,4:].fillna(0)
+    data.iloc[:,4:] = data.iloc[:,4:].fillna( 0)
     data['location'] = data['location'].replace('Czechia', 'Czech')
 
     data['next_day_predict'] = 0
@@ -93,26 +90,5 @@ def map_chart(area, column):
     fig.show()
 
 if __name__ == "__main__":
-    '''Update data'''
-    #update_data()
-    #clean_data()
+    df = get_data_json()
 
-    '''Line chart'''
-    #country = ['United State', 'Vietnam', 'United Kingdom', 'India', 'China']
-    #column = 'new_cases_smoothed'
-    #line_chart(country, column)
-
-    '''Map chart'''
-    #area = 'iso_code'
-    #column = 'new_cases'
-    #map_chart(area, column)
-    
-    #np = get_data('Vietnam','new_cases')
-    #print(np)
-
-    # Get data for FE
-
-    
-    #df = get_data_tuan()
-    # Tuan lay data dinh dang json nay nha
-    data = get_data_json()
