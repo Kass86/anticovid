@@ -47,14 +47,7 @@ def UpdateDatabase():
 
 
 if __name__ == "__main__":
-<<<<<<< HEAD
-    #url = "https://covid.ourworldindata.org/data/owid-covid-data.csv"
-    #df = pd.read_csv(url)
-    #engine = create_engine('mysql://root:root@localhost/contacts')
-    print('vietcute')
-=======
     ConnectDatabase()
     df = Querydata()
 
     
->>>>>>> c915b3b75bf495b8e231f2af33b189fed418619c
