@@ -7,7 +7,7 @@ UI:
 PREDICTION:
 
 1. Difine problem:
-   - How many new cases are confirmed tomorrow?
+   - What is the trend next week?
    - In order to answer the above question. We use a basic Machine Learning Algorithm that is Linear Regression.
 2. Our data:
 
