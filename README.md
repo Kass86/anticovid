@@ -24,6 +24,8 @@ PREDICTION:
 
 4. Model evaluation:
 
+   ![New cases prediction](https://user-images.githubusercontent.com/48504388/137333656-6765d3f9-598f-4af6-95d8-bc9bd719dce1.jpg)
+
 SETUP-
 REQUIREMENT/
 RUN/
