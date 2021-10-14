@@ -23,9 +23,7 @@ PREDICTION:
    - We choose some `train` features that have high correlation metrics and we'll use data of 14 days previous to train model.
 
 4. Model evaluation:
-
+   - Look at Covid19 data of United States: Green line is predict values, red line is real data (7-day smoothed). 
+ 
    ![New cases prediction](https://user-images.githubusercontent.com/48504388/137333656-6765d3f9-598f-4af6-95d8-bc9bd719dce1.jpg)
 
-SETUP-
-REQUIREMENT/
-RUN/
