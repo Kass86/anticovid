@@ -25,6 +25,7 @@ Toptable inside Workout and it has:
 
 Flow Chart:
 ![Flow Chart](https://f42-zpg.zdn.vn/376792903083780140/09b7c0da6124a87af135.jpg)
+
 Html (index.html):
 
 - Linked with CSS (style.css) and Javascript (script.js) and necessary source for map (https://leafletjs.com/) and chart (https://jsfiddle.net/eq8nymsv/).
