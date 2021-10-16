@@ -13,8 +13,8 @@ async function main() {
   //convert data
   let realData = [];
   let smallData = [];
-  let days = Object.keys(data.iso_code).length / 50;
-  for (let i = 0; i < Object.keys(data.iso_code).length; i++) {
+  let days = Object.keys(data.date).length / 50;
+  for (let i = 0; i < Object.keys(data.date).length; i++) {
     smallData.push([
       data.iso_code[i],
       data.location[i],
@@ -23,6 +23,9 @@ async function main() {
       data.new_deaths[i],
       data.total_cases[i],
       data.total_deaths[i],
+      data.new_cases_smoothed[i],
+      data.new_deaths_smoothed[i],
+      data.next_day_predict[i],
     ]);
 
     if (i !== 0 && (i + 1) % days === 0) {
@@ -37,27 +40,28 @@ async function main() {
   let dataChart = [];
   let dataChart2, dataChart3;
   const form = document.querySelector('.form');
-  const containerWorkouts = document.querySelector('.workouts');
 
   //data for chart using both new case and new death (data,x,y)
   const convertDataForChart = function (data) {
     data.forEach(function (cur) {
-      dataChart.push(cur.slice(2, 5));
+      const smallcur = [...cur.slice(2, 3), ...cur.slice(7, 9)];
+      dataChart.push(smallcur);
     });
   };
 
   //data for chart using new case (data,x)
   const convertDataForChart2 = function (data) {
     data.forEach(function (cur) {
-      dataChart2.push(cur.slice(2, 4));
+      const smallcur2 = [...cur.slice(2, 3), ...cur.slice(7, 8)];
+      dataChart2.push(smallcur2);
     });
   };
 
   //data for chart using new death case (data,y)
   const convertDataForChart3 = function (data) {
     data.forEach(function (cur) {
-      const smallcur = [...cur.slice(2, 3), ...cur.slice(4, 5)];
-      dataChart3.push(smallcur);
+      const smallcur3 = [...cur.slice(2, 3), ...cur.slice(8, 9)];
+      dataChart3.push(smallcur3);
     });
   };
 
@@ -191,6 +195,7 @@ async function main() {
         const base = realData.find(index => index[0][0] === data[i].alpha3Code);
 
         const database = base?.slice().reverse();
+        console.log(database);
         let html = `
       <div class="workout__title">${data[i].name}</div>
       <img class="country__img" src="${data[i].flag}" />
@@ -279,15 +284,21 @@ async function main() {
         });
 
         let html2 = ``;
-
+        //reverse data for day
         const dataForTable = realData[thutu].slice().reverse();
-
-        html2 += `<div class="table__rows2 ${
-          dataForTable[3][3] >= dataForTable[0][3] ? 'predictup' : 'predictdown'
+        console.log(dataForTable);
+        html2 += `
+        <div class="table__rows2">
+      <div class="nuoc1"> Time </div>
+      <div class="soca1"> New Cases</div>
+      <div class="nguoichet1"> New Deaths </div>
+      </div>
+        <div class="table__rows2 ${
+          dataForTable[0][9] >= dataForTable[0][3] ? 'predictup' : 'predictdown'
         }">
       <div class="ngay"> Next day (Predict) </div>
-      <div class="soca"> ${dataForTable[3][3]}</div>
-      <div class="nguoichet">${dataForTable[3][4]}</div>
+      <div class="soca"> ${dataForTable[0][9]}</div>
+      <div class="nguoichet"></div>
       </div>`;
 
         for (let o = 0; o < 7; o++) {
