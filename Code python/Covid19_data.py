@@ -47,14 +47,14 @@ def get_data_json():
     data = data.reset_index()
     data.iloc[:,4:] = data.iloc[:,4:].fillna( 0)
     data['location'] = data['location'].replace('Czechia', 'Czech')
-
+  
     data['next_day_predict'] = 0
     for country in country_ranking:
         newcase = new_case_nextday(14, country)
         data.loc[data['location'] == country,'next_day_predict'] = newcase
 
     # Save Cleaned data in .csv file
-    data.to_json(r'%s\covid19_data_cleaned.json' % path)
+    data.to_csv(r'%s\covid19_data_cleaned.csv' % path)
     print('Cleaned data has been updated at %s' %date_update)
     return data
 

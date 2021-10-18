@@ -42,6 +42,7 @@ PREDICTION:
    - In order to answer the above question. We use a basic Machine Learning Algorithm that is Linear Regression.
 2. Our data:
 
+   - EDA here: https://github.com/Kass86/anticovid/blob/main/Covid19_data_analysis.ipynb
    - Data's description here: https://github.com/owid/covid-19-data/tree/master/public/data
    - Covid19 Dashboard here: https://datastudio.google.com/s/sR3DrBad-v8
    - Because the data collection has a large noise, we will use the smoothing data (7-day smoothed) to be `target` feature.
@@ -52,7 +53,7 @@ PREDICTION:
 
    ![heatmap](https://user-images.githubusercontent.com/48504388/137139543-b9bafbde-a434-4651-b878-69a820c3b376.jpg)
 
-   - We choose some `train` features that have high correlation metrics and we'll use data of 14 days previous to train mode (Why 14 days, We trained data with a variety of day_train from 7 to 60 days. We see day_train has the smallest mean error)
+   - We choose some `train` features that have high correlation metrics and we'll use data of some days previous to train model.
 
 4. Model evaluation:
 
