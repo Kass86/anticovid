@@ -245,14 +245,14 @@ async function main() {
   // create country rows
   const dashboard = document.querySelector('.table');
 
-  const tableData = function (dulieu) {
+  const tableData = function (data) {
     dashboard.innerHTML = '';
-    dulieu.forEach(function (test, i) {
+    data.forEach(function (test, i) {
       test = test.slice().reverse();
       const html = `<div class="table__rows country0${i}">
-    <div class="nuoc">${i + 1}. ${test[0][1]} </div>
-    <div class="soca">${test[0][5]}</div>
-    <div class="nguoichet">${test[0][6]}</div>
+    <div class="country">${i + 1}. ${test[0][1]} </div>
+    <div class="cases">${test[0][5]}</div>
+    <div class="deaths">${test[0][6]}</div>
 </div>`;
       dashboard.insertAdjacentHTML('beforebegin', html);
     });
@@ -260,23 +260,21 @@ async function main() {
   tableData(realData);
 
   // create detail for country row when user click on it
-  let thutu, thututruoc, el, preEl;
-  const boandulieu = function (element) {
-    document.querySelector(`.${element} div.soca`).classList.remove('hidden');
-    document
-      .querySelector(`.${element} div.nguoichet`)
-      .classList.remove('hidden');
+  let position, previousPositon, el, preEl;
+  const hidedata = function (element) {
+    document.querySelector(`.${element} div.cases`).classList.remove('hidden');
+    document.querySelector(`.${element} div.deaths`).classList.remove('hidden');
   };
   const andulieu = function (element) {
-    document.querySelector(`.${element} div.soca`).classList.add('hidden');
-    document.querySelector(`.${element} div.nguoichet`).classList.add('hidden');
+    document.querySelector(`.${element} div.cases`).classList.add('hidden');
+    document.querySelector(`.${element} div.deaths`).classList.add('hidden');
   };
 
   const detailTableData = function () {
     document.querySelector('.toptable').addEventListener('click', function (e) {
       if (e.target.closest('.table__rows')) {
         el = e.target.closest('.table__rows').classList.value.replace(' ', '.');
-        thutu = +el.slice(-2);
+        position = +el.slice(-2);
 
         // nice remove element by classname
         document.querySelectorAll('.table__rows2').forEach(function (a) {
@@ -285,27 +283,27 @@ async function main() {
 
         let html2 = ``;
         //reverse data for day
-        const dataForTable = realData[thutu].slice().reverse();
+        const dataForTable = realData[position].slice().reverse();
         console.log(dataForTable);
         html2 += `
         <div class="table__rows2">
-      <div class="nuoc1"> Time </div>
-      <div class="soca1"> New Cases</div>
-      <div class="nguoichet1"> New Deaths </div>
+      <div class="country1"> Time </div>
+      <div class="cases1"> New Cases</div>
+      <div class="deaths1"> New Deaths </div>
       </div>
         <div class="table__rows2 ${
           dataForTable[0][9] >= dataForTable[0][3] ? 'predictup' : 'predictdown'
         }">
-      <div class="ngay"> Next day (Predict) </div>
-      <div class="soca"> ${dataForTable[0][9]}</div>
-      <div class="nguoichet"></div>
+      <div class="day"> Next day (Predict) </div>
+      <div class="cases"> ${dataForTable[0][9]}</div>
+      <div class="deaths">0</div>
       </div>`;
 
         for (let o = 0; o < 7; o++) {
           html2 += `<div class="table__rows2">
-        <div class="ngay"> ${dataForTable[o][2]} </div>
-        <div class="soca"> ${dataForTable[o][3]}</div>
-        <div class="nguoichet">${dataForTable[o][4]}</div>
+        <div class="day"> ${dataForTable[o][2]} </div>
+        <div class="cases"> ${dataForTable[o][3]}</div>
+        <div class="deaths">${dataForTable[o][4]}</div>
         </div>`;
         }
         document.querySelector(`.${el}`).insertAdjacentHTML('afterend', html2);
@@ -313,26 +311,26 @@ async function main() {
         // hide 2 information of country row user chose then display it when user click on it or another country row (just to make effect) but a little complicate
         andulieu(el);
         if (preEl) {
-          boandulieu(preEl);
+          hidedata(preEl);
           if (preEl === el) el = null;
         }
         preEl = el;
 
         // remove detail of country row user chose when user click on it or another country row
-        if (thututruoc == thutu) {
+        if (previousPositon == position) {
           document.querySelectorAll('.table__rows2').forEach(function (a) {
             a.remove();
-            thututruoc = -1;
+            previousPositon = -1;
           });
         } else {
-          thututruoc = thutu;
+          previousPositon = position;
         }
         document.getElementById('chart_div').style.display = 'grid';
 
         let html3;
-        const chartAndFlag = function (thutudata) {
+        const chartAndFlag = function (positionOfData) {
           fetch(
-            `https://restcountries.com/v2/name/${realData[thutudata][0][1]}`
+            `https://restcountries.com/v2/name/${realData[positionOfData][0][1]}`
           )
             .then(response => {
               return response.json();
@@ -385,11 +383,11 @@ async function main() {
               L.marker([lat2, lng2]).addTo(map);
             });
         };
-        chartAndFlag(thutu);
+        chartAndFlag(position);
 
         // chart new case
         dataChart2 = [];
-        convertDataForChart2(realData[thutu]);
+        convertDataForChart2(realData[position]);
 
         chartnewcase(dataChart2, 'New');
       }
@@ -418,8 +416,8 @@ async function main() {
     if (e.target.closest('.country__img2')) {
       if (d === 0) {
         dataChart3 = [];
-        convertDataForChart3(realData[thutu]);
-        console.log(thutu);
+        convertDataForChart3(realData[position]);
+        console.log(position);
         chartnewcase(dataChart3, 'Death');
         d = 1;
       } else {
